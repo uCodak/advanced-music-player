@@ -1,3 +1,24 @@
+const searchInput = document.querySelector("input[type='text']");
+
+searchInput.addEventListener("input", (e) => {
+    const searchTerm = e.target.value.toLowerCase();
+    const tracks = document.querySelectorAll(".toggle-trigger");
+
+    tracks.forEach(trigger => {
+        const title = trigger.querySelector("p").textContent.toLowerCase();
+        const container = trigger.closest(".bg-white");
+        if (title.includes(searchTerm)) {
+            container.classList.remove("hidden");
+        } else {
+            container.classList.add("hidden");
+        }
+    });
+});
+
+
+
+
+
 const tracks = document.querySelectorAll(".toggle-trigger");
 let trackList = Array.from(document.querySelectorAll("audio"));
 let currentTrackIndex = 0;
@@ -86,6 +107,7 @@ function playNextTrack() {
 
     nextPlayer.querySelector(".play-icon").classList.add("hidden");
     nextPlayer.querySelector(".pause-icon").classList.remove("hidden");
+
 }
 
 function playPreviousTrack() {
@@ -124,3 +146,38 @@ document.querySelector("#next").addEventListener("click", () => {
 document.querySelector(".prev-icon").addEventListener("click", () => {
     playPreviousTrack();
 });
+
+
+
+
+// Main player controls
+
+const mainPlayToggle = document.querySelector(".play-toggle");
+const mainPlayIcon = mainPlayToggle.querySelector(".play-icon");
+const mainPauseIcon = mainPlayToggle.querySelector(".pause-icon");
+
+mainPlayToggle.addEventListener("click", () => {
+    const currentAudio = trackList[currentTrackIndex];
+    const player = currentAudio.closest(".player");
+
+    if (currentAudio.paused) {
+        pauseAllExcept(currentAudio);
+        currentAudio.play();
+        mainPlayIcon.classList.add("hidden");
+        mainPauseIcon.classList.remove("hidden");
+
+        // Sync mini player too
+        player.classList.remove("hidden");
+        player.querySelector(".play-icon").classList.add("hidden");
+        player.querySelector(".pause-icon").classList.remove("hidden");
+    } else {
+        currentAudio.pause();
+        mainPlayIcon.classList.remove("hidden");
+        mainPauseIcon.classList.add("hidden");
+
+        // Sync mini player too
+        player.querySelector(".play-icon").classList.remove("hidden");
+        player.querySelector(".pause-icon").classList.add("hidden");
+    }
+});
+
